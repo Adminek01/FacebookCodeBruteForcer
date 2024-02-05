@@ -29,13 +29,16 @@ npm install
 Uruchom Program:
 Po zainstalowaniu zależności, możesz uruchomić swój program. Przyjmując, że program to plik JavaScript (np. app.js), możesz go uruchomić poniższym poleceniem:
 
-bash
-Copy code
-node app.js
-
-
-
 ┌─[✗]─[user@parrot]─[~/FacebookCodeBruteForcer]
+└──╼ $ll
+total 12K
+-rw-r--r-- 1 user user 2.7K Feb  5 16:37 FacebookCodeBruteForcer
+-rw-r--r-- 1 user user 2.7K Feb  5 16:37 index.js
+-rw-r--r-- 1 user user 1.9K Feb  5 16:37 README.md
+┌─[user@parrot]─[~/FacebookCodeBruteForcer]
+└──╼ $ls
+FacebookCodeBruteForcer  index.js  README.md
+┌─[user@parrot]─[~/FacebookCodeBruteForcer]
 └──╼ $npm init -y
 Wrote to /home/user/FacebookCodeBruteForcer/package.json:
 
@@ -54,10 +57,18 @@ Wrote to /home/user/FacebookCodeBruteForcer/package.json:
 
 
 ┌─[user@parrot]─[~/FacebookCodeBruteForcer]
-└──╼ $npm install
+└──╼ $npm install readline-sync
 
-up to date, audited 1 package in 845ms
+added 1 package, and audited 2 packages in 5s
 
 found 0 vulnerabilities
 ┌─[user@parrot]─[~/FacebookCodeBruteForcer]
-└──╼ $
+└──╼ $node index.js
+
+[1] id
+[2] email
+[3] phone
+[0] CANCEL
+
+Select the identifier type [1, 2, 3, 0]: 
+
