@@ -39,36 +39,38 @@ total 12K
 └──╼ $ls
 FacebookCodeBruteForcer  index.js  README.md
 ┌─[user@parrot]─[~/FacebookCodeBruteForcer]
-└──╼ $npm init -y
-Wrote to /home/user/FacebookCodeBruteForcer/package.json:
+└──╼ $npm init 
 
-{
-  "name": "facebookcodebruteforcer",
-  "version": "1.0.0",
-  "description": "atak brute-force na 6-cyfrowe kody",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
-}
+- `sudo apt install nodejs` (dla systemów opartych na Debianie, takich jak Ubuntu)
+- `sudo yum install nodejs` (dla systemów opartych na Red Hat, takich jak CentOS)
+- `brew install node` (dla systemów macOS)
 
+Więcej informacji o instalacji Node.js znajdziesz na [tej stronie](^1^).
 
-┌─[user@parrot]─[~/FacebookCodeBruteForcer]
-└──╼ $npm install readline-sync
+Po zainstalowaniu Node.js, możesz zainstalować yarn, używając npm, tak jak zrobiłeś to z axios:
 
-added 1 package, and audited 2 packages in 5s
+- `sudo npm install -g yarn`
 
-found 0 vulnerabilities
-┌─[user@parrot]─[~/FacebookCodeBruteForcer]
-└──╼ $node index.js
+To zainstaluje yarn globalnie, co oznacza, że będziesz mógł go używać w dowolnym projekcie. Możesz sprawdzić, czy yarn został poprawnie zainstalowany, wpisując w terminalu:
 
-[1] id
-[2] email
-[3] phone
-[0] CANCEL
+- `yarn --version`
 
-Select the identifier type [1, 2, 3, 0]: 
+Powinieneś zobaczyć numer wersji yarn, taki jak 1.22.11.
 
+Po zainstalowaniu yarn, możesz użyć go do dodawania pakietów do swojego projektu, tak jak zrobiłeś to z npm. Na przykład, aby dodać axios za pomocą yarn, wpisz w terminalu:
+
+- `yarn add axios`
+
+To zainstaluje axios lokalnie w twoim projekcie i zaktualizuje plik package.json i yarn.lock. Możesz sprawdzić, czy axios został poprawnie zainstalowany, wpisując w terminalu:
+
+- `yarn list axios`
+
+Powinieneś zobaczyć nazwę i wersję axios, taką jak axios@0.24.0.
+
+Więcej informacji o używaniu yarn znajdziesz na [tej stronie](^2^).
+
+Mam nadzieję, że to ci pomoże. Jeśli masz jakieś pytania lub potrzebujesz więcej pomocy,
+
+Źródło: Konwersacja za pomocą usługi Bing, 5.02.2024
+(1) Getting Started | Yarn. https://classic.yarnpkg.com/lang/en/docs/getting-started/.
+(2) How To Install and Use the Yarn Package Manager for Node.js. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-the-yarn-package-manager-for-node-js.
