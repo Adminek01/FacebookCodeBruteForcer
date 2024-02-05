@@ -1,4 +1,4 @@
-source venv/bin/activateconst readlineSync = require('readline-sync');
+const readlineSync = require('readline-sync');
 const axios = require('axios');
 
 // A dictionary of common codes
