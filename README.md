@@ -32,3 +32,32 @@ Po zainstalowaniu zależności, możesz uruchomić swój program. Przyjmując, �
 bash
 Copy code
 node app.js
+
+
+
+┌─[✗]─[user@parrot]─[~/FacebookCodeBruteForcer]
+└──╼ $npm init -y
+Wrote to /home/user/FacebookCodeBruteForcer/package.json:
+
+{
+  "name": "facebookcodebruteforcer",
+  "version": "1.0.0",
+  "description": "atak brute-force na 6-cyfrowe kody",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+
+┌─[user@parrot]─[~/FacebookCodeBruteForcer]
+└──╼ $npm install
+
+up to date, audited 1 package in 845ms
+
+found 0 vulnerabilities
+┌─[user@parrot]─[~/FacebookCodeBruteForcer]
+└──╼ $
