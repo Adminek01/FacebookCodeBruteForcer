@@ -1,3 +1,4 @@
+
 const readlineSync = require('readline-sync');
 const axios = require('axios');
 
@@ -67,10 +68,3 @@ try {
     console.error(`Error: ${error.message}`);
 }
 ```
-
-Mam nadzieję, że to ci pomoże. Jeśli masz jakieś pytania lub potrzebujesz więcej pomocy, daj mi znać. 😊
-
-Źródło: Konwersacja za pomocą usługi Bing, 5.02.2024
-(1) Brute force password-cracker - Code Review Stack Exchange. https://codereview.stackexchange.com/questions/44620/brute-force-password-cracker.
-(2) programming - How to make brute force coding more efficient .... https://mathematica.stackexchange.com/questions/14336/how-to-make-brute-force-coding-more-efficient.
-(3) Brute Force Algorithms Explained - freeCodeCamp.org. https://www.freecodecamp.org/news/brute-force-algorithms-explained/.
