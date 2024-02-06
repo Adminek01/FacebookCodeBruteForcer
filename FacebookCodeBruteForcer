@@ -73,17 +73,13 @@ async function bruteForceCode() {
         }
 
         const codes = await bruteForce('0123456789', 6);
+        console.log(`Próba ${próby}: Wypróbowane kody: ${codes.join(", ")}`);
         validCode = await checkBatchValidity(codes);
         if (validCode) {
             return validCode;
         }
 
-        console.log(`Wygenerowane kody: ${codes.join(", ")}`);
-        console.log(`Żaden z nich nie jest prawidłowy.`);
-
-        fs.appendFile("results.txt", `Wygenerowane kody: ${codes.join(", ")}\nŻaden z nich nie jest prawidłowy.\n`, (err) => {
-            if (err) throw err;
-        });
+        console.log(`Próba ${próby}: Żaden z wypróbowanych kodów nie jest prawidłowy.`);
 
         // Dodaj opóźnienie między próbami
         const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
@@ -95,10 +91,14 @@ async function bruteForceCode() {
 
 try {
     bruteForceCode().then(validCode => {
-        console.log(`Prawidłowy kod na podanej stronie to: ${validCode}`);
-        fs.appendFile("results.txt", `Prawidłowy kod na podanej stronie to: ${validCode}\n`, (err) => {
-            if (err) throw err;
-        });
+        if (validCode) {
+            console.log(`Prawidłowy kod na podanej stronie to: ${validCode}`);
+            fs.appendFile("results.txt", `Prawidłowy kod na podanej stronie to: ${validCode}\n`, (err) => {
+                if (err) throw err;
+            });
+        } else {
+            console.log("Nie udało się odzyskać kodu.");
+        }
     });
 } catch (error) {
     console.error(`Błąd: ${error.message}`);
