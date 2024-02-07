@@ -3,6 +3,9 @@ const axios = require('axios');
 const fs = require('fs');
 const crypto = require('crypto');
 
+// Definicja słownika kodów
+const słownik = ["1234", "0000", "1111", "4321", "5555", "9999", "12345678", "87654321"];
+
 // Funkcja do opóźniania działania programu
 const delay = async (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
